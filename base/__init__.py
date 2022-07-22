@@ -42,22 +42,23 @@ class Core:
         report_path = os.path.join(reports_path, "index.html")
         with open(report_path, "w") as report_file:
             report_file.write(report)
-        html_links = [
-            {
-                "description": "report",
-                "name": "index.html",
-                "path": reports_path,
-            },
-        ]
-        report_info = self.report.create_extended_report(
-            {
+        report_params = config.get("report_params")
+        if not report_params:
+            html_links = [
+                {
+                    "description": "report",
+                    "name": "index.html",
+                    "path": reports_path,
+                },
+            ]
+            report_params = {
                 "direct_html_link_index": 0,
                 "html_links": html_links,
                 "message": "A sample report.",
                 "report_object_name": report_name,
                 "workspace_name": workspace_name,
             }
-        )
+        report_info = self.report.create_extended_report(report_params)
         return {
             "report_name": report_info["name"],
             "report_ref": report_info["ref"],
